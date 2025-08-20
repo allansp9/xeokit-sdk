@@ -138,6 +138,16 @@ class AngleMeasurement extends Component {
         };
         this._angleLabel = makeLabel(this._color || "#00BBFF", 2, [ this._visible, this._angleVisible, this._labelsVisible ]);
 
+        //Collab
+        /*
+        Mudança 1
+        Objetivo: possibilitar a identificação da medida que invocou 
+        o menu de contexto.
+        Resolução: nova propriedade "measurement" no elemento 
+        LABEL que identifica a medida, que é acessada ao renderizar o menu.
+        */
+        this._angleLabel._label.measurement=this;
+
         const makeDot = (cfg, visibilityChannels) => {
             const dot = new Dot3D(scene, cfg, container, {
                 fillColor: this._color,

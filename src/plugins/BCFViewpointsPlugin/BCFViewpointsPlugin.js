@@ -508,7 +508,20 @@ class BCFViewpointsPlugin extends Plugin {
         const colorizedObjectIds = new Set(scene.colorizedObjectIds);
 
         const coloringMap = Object.values(scene.objects)
-            .filter(entity => opacityObjectIds.has(entity.id) || colorizedObjectIds.has(entity.id) || xrayedObjectIds.has(entity.id))
+            //Collab
+            /*
+            Mudança 4
+            Objetivo:  contornar o novo efeito de xRay, que permite que
+            as linhas de plano  transpassem os elementos do modelo,
+            de modo que ao ligar o efeito, uma ênfase seja dada nas 
+            linhas de modo a ocultá-las, obrigando a criá-las com
+            a propriedade "isObject=true" para que a ênfase seja dada.
+            Resolução: uma vez que os todos os "isObject=true" são
+            considerados no "getViewpoint" do BCF, foi incluída nova
+            condição para filtrar apenas os objetos pertencentes ao modelo
+            (entity.model)
+            */
+            .filter(entity => entity.model && (opacityObjectIds.has(entity.id) || colorizedObjectIds.has(entity.id) || xrayedObjectIds.has(entity.id)))
             .reduce((coloringMap, entity) => {
 
                 let color = colorizeToRGB(entity.colorize);
@@ -588,7 +601,9 @@ class BCFViewpointsPlugin extends Plugin {
         for (let i = 0, len = objectIds.length; i < len; i++) {
             const objectId = objectIds[i];
             const entity = scene.objects[objectId];
-            if (entity) {
+            //Collab
+            //Mudança 4
+            if (entity&&entity.model) {
                 const component = {
                     ifc_guid: entity.originalSystemId,
                     originating_system: this.originatingSystem

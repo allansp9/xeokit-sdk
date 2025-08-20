@@ -341,6 +341,33 @@ class GLTFLoaderPlugin extends Plugin {
         }
         if (params.metaModelSrc || params.metaModelJSON) {
             const processMetaModelJSON = (metaModelJSON) => {
+                //Collab
+                /*
+                Mudança 10
+                Objetivo: possibilitar visualização de árvore no modo "storey"
+                mesmo com falha na estrutura hierárquica do JSON.
+                Resolução: forçar hierarquia conforme padrão IFC
+                */
+                var [ifcProject, ifcSite, ifcBuilding] = [null,null,null];
+                metaModelJSON.metaObjects.forEach((obj)=>{
+                    switch(obj.type){
+                        case 'IfcProject':
+                            ifcProject = obj;
+                            obj.parent = null;
+                            break;
+                        case 'IfcSite':
+                            ifcSite = obj;
+                            obj.parent = ifcProject.id;
+                            break;
+                        case 'IfcBuilding':
+                            ifcBuilding = obj;
+                            obj.parent = ifcSite.id;
+                            break;
+                        case 'IfcBuildingStorey':
+                            obj.parent = ifcBuilding.id;
+                            break;
+                    }
+                });
                 this.viewer.metaScene.createMetaModel(modelId, metaModelJSON, {});
                 this.viewer.scene.canvas.spinner.processes--;
                 if (params.src) {

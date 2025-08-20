@@ -830,7 +830,18 @@ class BCFViewpointsPlugin extends Plugin {
                         this._withBCFComponent(options, component, entity => {
                             entity.colorize = colorize;
                             if (alphaDefined) {
-                                entity.opacity = alpha;
+                                // entity.opacity = alpha;
+                                //Collab
+                                /*
+                                Mudança 5
+                                Objetivo: aplicar ênfase xRay ao carregar viewpoints.
+                                Resolução: altera a implementação que aplica a ênfase 
+                                especificamente quando o apontamento é realizado pela 
+                                plataforma xeokit, generalizando o funcionamento 
+                                para ativar a ênfase sempre que perceber um elemento
+                                com alpha na cor.
+                                */
+                                entity.xrayed = true;
                             }
                         }));
                 });

@@ -114,7 +114,13 @@ function parseGLTF(plugin, src, gltf, metaModelJSON, options, sceneModel, ok, er
             metaObjects: [],
             loadBuffer: options.loadBuffer,
             basePath: options.basePath,
-            handlenode: options.handlenode,
+            //Collab
+            /*
+            Mudança 8
+            Objetivo: ativar o método correto para criação de nós GLTF
+            Resolução: corrigir a parametrização para utilização da 
+            opção correta "handleGLTFNode"            */
+            handlenode: options.handleGLTFNode,
             backfaces: !!options.backfaces,
             gltfData: processedGLTF,
             scene: sceneModel.scene,

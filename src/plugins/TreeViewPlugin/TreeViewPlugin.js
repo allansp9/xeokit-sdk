@@ -657,7 +657,15 @@ export class TreeViewPlugin extends Plugin {
         model.on("destroyed", () => {
             this.removeModel(model.id);
         });
-        this._createNodes();
+        //Collab
+        /*
+        Mudança 12
+        Objetivo: ativar a opção de configuração "rootName" no 
+        método público "addModel" permitindo o uso da opção de 
+        configuração para personalização do nome do nó raiz.
+        Resolução: correção da implementação.
+        */        
+        this._createNodes(options);
     }
 
     /**
@@ -832,7 +840,9 @@ export class TreeViewPlugin extends Plugin {
         super.destroy();
     }
 
-    _createNodes() {
+    //Collab
+    //Mudança 12
+    _createNodes(cfg = {}) {
         if (this._rootElement) {
             this._rootElement.parentNode.removeChild(this._rootElement);
             this._rootElement = null;
@@ -843,9 +853,9 @@ export class TreeViewPlugin extends Plugin {
         this._nodeNodes = {};
         this._validate();
         if (this.valid || (this._hierarchy !== "storeys")) {
-            this._createEnabledNodes();
+            this._createEnabledNodes(cfg);
         } else {
-            this._createDisabledNodes();
+            this._createDisabledNodes(cfg);
         }
     }
 
@@ -897,23 +907,25 @@ export class TreeViewPlugin extends Plugin {
         return true;
     }
 
-    _createEnabledNodes() {
+    //Collab
+    //Mudança 12
+    _createEnabledNodes(cfg = {}) {
         if (this._pruneEmptyNodes) {
             this._findEmptyNodes();
         }
         switch (this._hierarchy) {
             case "storeys":
-                this._createStoreysNodes();
+                this._createStoreysNodes(cfg);
                 if (this._rootNodes.length === 0) {
                     this.error("Failed to build storeys hierarchy");
                 }
                 break;
             case "types":
-                this._createTypesNodes();
+                this._createTypesNodes(cfg);
                 break;
             case "containment":
             default:
-                this._createContainmentNodes();
+                this._createContainmentNodes(cfg);
         }
         if (this._sortNodes) {
             this._doSortNodes();
@@ -923,7 +935,9 @@ export class TreeViewPlugin extends Plugin {
         this.expandToDepth(this._autoExpandDepth);
     }
 
-    _createDisabledNodes() {
+    //Collab
+    //Mudança 12
+    _createDisabledNodes(cfg = {}) {
 
         const rootNode = this._renderService.createRootNode();
         this._rootElement = rootNode;
@@ -972,14 +986,18 @@ export class TreeViewPlugin extends Plugin {
         return metaObject._countEntities;
     }
 
-    _createStoreysNodes() {
+    //Collab
+    //Mudança 12
+    _createStoreysNodes(cfg = {}) {
         const rootMetaObjects = this._viewer.metaScene.rootMetaObjects;
         for (let id in rootMetaObjects) {
-            this._createStoreysNodes2(rootMetaObjects[id], null, null, null, null);
+            this._createStoreysNodes2(rootMetaObjects[id], null, null, null, null, cfg);
         }
     }
 
-    _createStoreysNodes2(metaObject, projectNode, buildingNode, storeyNode, typeNodes) {
+    //Collab
+    //Mudança 12
+    _createStoreysNodes2(metaObject, projectNode, buildingNode, storeyNode, typeNodes, cfg) {
         if (this._pruneEmptyNodes && (metaObject._countEntities === 0)) {
             return;
         }
@@ -992,7 +1010,9 @@ export class TreeViewPlugin extends Plugin {
             projectNode = {
                 nodeId: `${this._id}-${objectId}`,
                 objectId,
-                title: (metaObject.metaModels.length === 0) ? metaObjectName : this._rootNames[metaObject.metaModels[0].id] || ((metaObjectName && metaObjectName !== "" && metaObjectName !== "Undefined" && metaObjectName !== "Default") ? metaObjectName : metaObjectType),
+                //Collab
+                //Mudança 12
+                title: (cfg.rootName&&metaObject.metaModel.rootName) || ((metaObjectName && metaObjectName !== "" && metaObjectName !== "Undefined" && metaObjectName !== "Default") ? metaObjectName : metaObjectType),
                 type: metaObjectType,
                 parent: null,
                 numEntities: 0,
@@ -1091,19 +1111,25 @@ export class TreeViewPlugin extends Plugin {
         if (children) {
             for (let i = 0, len = children.length; i < len; i++) {
                 const childMetaObject = children[i];
-                this._createStoreysNodes2(childMetaObject, projectNode, buildingNode, storeyNode, typeNodes);
+                //Collab
+                //Mudança 12
+                this._createStoreysNodes2(childMetaObject, projectNode, buildingNode, storeyNode, typeNodes, cfg);
             }
         }
     }
 
-    _createTypesNodes() {
+    _createTypesNodes(cfg = {}) {
         const rootMetaObjects = this._viewer.metaScene.rootMetaObjects;
         for (let id in rootMetaObjects) {
-            this._createTypesNodes2(rootMetaObjects[id], null, null);
+            //Collab
+            //Mudança 12
+            this._createTypesNodes2(rootMetaObjects[id], null, null, cfg);
         }
     }
 
-    _createTypesNodes2(metaObject, rootNode, typeNodes) {
+    //Collab
+    //Mudança 12
+    _createTypesNodes2(metaObject, rootNode, typeNodes, cfg) {
         if (this._pruneEmptyNodes && (metaObject._countEntities === 0)) {
             return;
         }
@@ -1115,7 +1141,9 @@ export class TreeViewPlugin extends Plugin {
             rootNode = {
                 nodeId: `${this._id}-${objectId}`,
                 objectId: objectId,
-                title: metaObject.metaModels.length === 0 ? metaObjectName : this._rootNames[metaObject.metaModels[0].id] || ((metaObjectName && metaObjectName !== "" && metaObjectName !== "Undefined" && metaObjectName !== "Default") ? metaObjectName : metaObjectType),
+                //Collab
+                //Mudança 12
+                title: (cfg.rootName&&metaObject.metaModel.rootName) || ((metaObjectName && metaObjectName !== "" && metaObjectName !== "Undefined" && metaObjectName !== "Default") ? metaObjectName : metaObjectType),
                 type: metaObjectType,
                 parent: null,
                 numEntities: 0,
@@ -1173,19 +1201,27 @@ export class TreeViewPlugin extends Plugin {
         if (children) {
             for (let i = 0, len = children.length; i < len; i++) {
                 const childMetaObject = children[i];
-                this._createTypesNodes2(childMetaObject, rootNode, typeNodes);
+                //Collab
+                //Mudança 12
+                this._createTypesNodes2(childMetaObject, rootNode, typeNodes, cfg);
             }
         }
     }
 
-    _createContainmentNodes() {
+    //Collab
+    //Mudança 12
+    _createContainmentNodes(cfg = {}) {
         const rootMetaObjects = this._viewer.metaScene.rootMetaObjects;
         for (let id in rootMetaObjects) {
-            this._createContainmentNodes2(rootMetaObjects[id], null);
+            //Collab
+            //Mudança 12
+            this._createContainmentNodes2(rootMetaObjects[id], null, cfg);
         }
     }
 
-    _createContainmentNodes2(metaObject, parent) {
+    //Collab
+    //Mudança 12
+    _createContainmentNodes2(metaObject, parent, cfg) {
         if (this._pruneEmptyNodes && (metaObject._countEntities === 0)) {
             return;
         }
@@ -1196,7 +1232,9 @@ export class TreeViewPlugin extends Plugin {
         const node = {
             nodeId: `${this._id}-${objectId}`,
             objectId: objectId,
-            title: (!parent) ? metaObject.metaModels.length === 0 ? metaObjectName : (this._rootNames[metaObject.metaModels[0].id] || metaObjectName) : (metaObjectName && metaObjectName !== "" && metaObjectName !== "Undefined" && metaObjectName !== "Default") ? metaObjectName : metaObjectType,
+            //Collab
+            //Mudança 12
+            title: (!parent) ? ((cfg.rootName&&metaObject.metaModel.rootName) || metaObjectName) : (metaObjectName && metaObjectName !== "" && metaObjectName !== "Undefined" && metaObjectName !== "Default") ? metaObjectName : metaObjectType,
             type: metaObjectType,
             parent: parent,
             numEntities: 0,
@@ -1215,7 +1253,9 @@ export class TreeViewPlugin extends Plugin {
         if (children) {
             for (let i = 0, len = children.length; i < len; i++) {
                 const childMetaObject = children[i];
-                this._createContainmentNodes2(childMetaObject, node);
+                //Collab
+                //Mudança 12
+                this._createContainmentNodes2(childMetaObject, node, cfg);
             }
         }
     }

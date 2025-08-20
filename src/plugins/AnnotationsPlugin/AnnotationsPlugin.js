@@ -389,6 +389,14 @@ class AnnotationsPlugin extends Plugin {
         this._container = cfg.container || document.body;
         this._values = cfg.values || {};
 
+        //Collab
+        /*
+        Mudança 2
+        Objetivo: possibilitar efeito highligh ao clicar em anotação de vista.
+        Resolução: implementação de métodos "activate" e "deactivate" na classe.
+        */
+        this._elementSelec = cfg.elementSelect || {}
+
         /**
          * The {@link Annotation}s created by {@link AnnotationsPlugin#createAnnotation}, each mapped to its {@link Annotation#id}.
          * @type {{String:Annotation}}
@@ -562,6 +570,50 @@ class AnnotationsPlugin extends Plugin {
     destroy() {
         this.clear();
         super.destroy();
+    }
+
+    //Collab
+    //ativa Highligh ao passar o mouse
+    /*
+    Mudança 2
+    Objetivo: possibilitar efeito highligh ao clicar em anotação de vista.
+    Resolução: implementação de métodos "activate" e "deactivate" na classe.
+    */
+    activate(){
+        const cameraControl = this.viewer.cameraControl;
+        const worldPos = math.vec3();
+        const hoverCanvasPos = math.vec2();
+        this._elementSelec.active = true;
+
+        this._onHoverSurface = cameraControl.on("hoverSurface", e => {
+            if(this._elementSelec.active){
+                this._elementSelec.previous = this._elementSelec.current
+                this._elementSelec.current = e.entity
+                worldPos.set(e.worldPos);
+                hoverCanvasPos.set(e.canvasPos);
+
+                this.viewer.scene.canvas.canvas.style.cursor = "pointer";
+                if(this._elementSelec.previous!=null){
+                    this.viewer.scene.setObjectsHighlighted(this._elementSelec.previous.id, false);
+                }
+                this.viewer.scene.setObjectsHighlighted(this._elementSelec.current.id, true);
+            }
+        });
+    }
+
+    //Collab
+    //desativa Highligh ao passar o mouse
+    //Collab
+    /*
+    Mudança 2
+    Objetivo: possibilitar efeito highligh ao clicar em anotação de vista.
+    Resolução: implementação de métodos "activate" e "deactivate" na classe.
+    */
+    deactivate(){
+        if(this._elementSelec.active){
+            this.viewer.scene.setObjectsHighlighted(this._elementSelec.current.id, false);
+            this._elementSelec.active = false;
+        }
     }
 }
 

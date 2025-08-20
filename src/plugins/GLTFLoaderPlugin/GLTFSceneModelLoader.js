@@ -126,7 +126,16 @@ function parseGLTF(plugin, src, gltf, metaModelJSON, options, sceneModel, ok, er
             nextId: 0,
             log: (msg) => {
                 plugin.log(msg);
-            }
+            },
+            //Collab
+            /*
+            Mudança 7
+            Objetivo: ativar implementação de ID globalizado 
+            Resolução: incorporar parâmetro de configuração do método
+            público "createMetaModel" nas chamadas internas.
+            */
+            globalizeObjectIds: options.globalizeObjectIds
+            
         };
         loadTextures(ctx);
         loadMaterials(ctx);
@@ -141,7 +150,15 @@ function parseGLTF(plugin, src, gltf, metaModelJSON, options, sceneModel, ok, er
         sceneModel.finalize();
         if (options.autoMetaModel) {
             plugin.viewer.metaScene.createMetaModel(sceneModel.id, {
-                metaObjects: ctx.metaObjects
+                metaObjects: ctx.metaObjects,
+                //Collab
+                /*
+                Mudança 7
+                Objetivo: ativar implementação de ID globalizado 
+                Resolução: incorporar parâmetro de configuração do método
+                público "createMetaModel" nas chamadas internas.
+                */
+                globalizeObjectIds: params.globalizeObjectIds
             });
         }
         spinner.processes--;

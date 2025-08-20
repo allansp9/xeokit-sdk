@@ -142,7 +142,14 @@ class MetaScene {
             propertySets: []
         });
 
-        metaModel.loadData(metaModelData);
+        //collab
+        /*
+        Mudança 7
+        Objetivo: ativar implementação de ID globalizado 
+        Resolução: incorporar parâmetro de configuração do método
+        público "createMetaModel" nas chamadas internas.
+        */
+        metaModel.loadData(metaModelData, options);
 
         metaModel.finalize();
 

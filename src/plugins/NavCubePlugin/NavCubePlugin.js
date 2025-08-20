@@ -534,6 +534,15 @@ class NavCubePlugin extends Plugin {
                     }
                 };
             })();
+            //Collab
+            /*
+            Mudança 11
+            Objetivo: possibilitar posicionamento default conforme o 
+            cubo de navegação.
+            Resolução: expor o método interno "flyTo" permitindo 
+            sua invocação pela implementação externa.
+            */
+            self._cameraFlyTo=flyTo;
         }
 
         this._onUpdated = viewer.localeService.on("updated", () => {

@@ -426,7 +426,18 @@ class Camera extends Component {
             return;
         }
         const dir = math.normalizeVec3(vec, tempVec3c);
-        this.eye = math.addVec3(this._look, math.mulVec3Scalar(dir, newLenLook), tempVec3d);
+
+        //Collab
+        /*
+        Mudança 3
+        Objetivo: suavizar o movimento de zoom
+        Resolução: altera a implementação para posicionar via "cameraFlight"
+        */
+        //this.eye = math.addVec3(this._look, math.mulVec3Scalar(dir, newLenLook), tempVec3d$h);
+        this.scene.viewer.cameraFlight.flyTo({
+            eye:math.addVec3(this._look, math.mulVec3Scalar(dir, newLenLook), tempVec3d$h)
+            ,duration:0.5
+        });        
     }
 
     /**

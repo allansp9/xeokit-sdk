@@ -384,10 +384,16 @@ class AnnotationsPlugin extends Plugin {
 
         super("Annotations", viewer);
 
-        this._labelHTML = cfg.labelHTML || "<div></div>";
-        this._markerHTML = cfg.markerHTML || "<div></div>";
-        this._container = cfg.container || document.body;
-        this._values = cfg.values || {};
+        this._markerHTML = "<div class='annotation-marker' style='background-color: {{markerBGColor}};'>{{glyph}}</div>",
+        this._labelHTML = "<div class='annotation-label' style='background-color: {{labelBGColor}};'><div class='annotation-title'>{{title}}</div><div class='annotation-desc'>{{description}}</div></div>",
+        this._container =  document.body;
+        this._values =  {};
+        this._onHoverSurface = null;
+        this._elementSelec = {
+            previous: null,
+            current: null,
+            active: false
+        }
 
         //Collab
         /*
@@ -403,7 +409,7 @@ class AnnotationsPlugin extends Plugin {
          */
         this.annotations = {};
 
-        this.surfaceOffset = cfg.surfaceOffset;
+        this.surfaceOffset = 0.3
     }
 
     /**
@@ -570,6 +576,7 @@ class AnnotationsPlugin extends Plugin {
     destroy() {
         this.clear();
         super.destroy();
+        this.deactivate();
     }
 
     //Collab

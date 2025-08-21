@@ -285,11 +285,11 @@ export class VBOBatchingTrianglesLayer {
 
         if (uv && uv.length > 0) {
             for (let i = 0, len = uv.length; i < len; i++) {
-                buffer.uv.push(uv[i]);
+                try{buffer.uv.push(uv[i]);}catch(e){console.warn(`buffer.uv error ${e}`)};
             }
         } else if (uvCompressed && uvCompressed.length > 0) {
             for (let i = 0, len = uvCompressed.length; i < len; i++) {
-                buffer.uv.push(uvCompressed[i]);
+                try{buffer.uv.push(uvCompressed[i]);}catch(e){console.warn(`buffer.uvCompressed error ${e}`)};
             }
         }
 
@@ -300,7 +300,7 @@ export class VBOBatchingTrianglesLayer {
 
         if (edgeIndices) {
             for (let i = 0, len = edgeIndices.length; i < len; i++) {
-                buffer.edgeIndices.push(vertsBaseIndex + edgeIndices[i]);
+                try{buffer.edgeIndices.push(vertsBaseIndex + edgeIndices[i]);}catch(e){console.warn(`buffer.edgeIndices error ${e}`)};
             }
         }
 

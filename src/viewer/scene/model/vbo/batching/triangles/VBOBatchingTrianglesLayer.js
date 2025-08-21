@@ -249,32 +249,32 @@ export class VBOBatchingTrianglesLayer {
             }
             transformAndOctEncodeNormals(worldNormalMatrix, normals, normals.length, buffer.normals, buffer.normals.length);
         }
-
+	      //fix Collab
         if (colors) {
-            for (let i = 0, len = colors.length; i < len; i += 3) {
+            for (let i = 0, len = colors.length; i < len; i += 3) try{
                 buffer.colors.push(colors[i] * 255);
                 buffer.colors.push(colors[i + 1] * 255);
                 buffer.colors.push(colors[i + 2] * 255);
                 buffer.colors.push(255);
-            }
+            }catch(e){console.warn(`buffer colors error ${e}`)}
         } else if (colorsCompressed) {
-            for (let i = 0, len = colors.length; i < len; i += 3) {
+            for (let i = 0, len = colors.length; i < len; i += 3) try{
                 buffer.colors.push(colors[i]);
                 buffer.colors.push(colors[i + 1]);
                 buffer.colors.push(colors[i + 2]);
                 buffer.colors.push(255);
-            }
+            }catch(e){console.warn(`buffer compressedColors error ${e}`)}
         } else if (color) {
             const r = color[0]; // Color is pre-quantized by VBOSceneModel
             const g = color[1];
             const b = color[2];
             const a = opacity;
-            for (let i = 0; i < numVerts; i++) {
+            for (let i = 0; i < numVerts; i++) try{
                 buffer.colors.push(r);
                 buffer.colors.push(g);
                 buffer.colors.push(b);
                 buffer.colors.push(a);
-            }
+            }catch(e){console.warn(`buffer.color error ${e}`)};
         }
         const metallicValue = (metallic !== null && metallic !== undefined) ? metallic : 0;
         const roughnessValue = (roughness !== null && roughness !== undefined) ? roughness : 255;
@@ -294,7 +294,7 @@ export class VBOBatchingTrianglesLayer {
         }
 
         for (let i = 0, len = indices.length; i < len; i++) {
-            buffer.indices.push(vertsBaseIndex + indices[i]);
+            try{buffer.indices.push(vertsBaseIndex + indices[i])} catch(e){console.warn(`buffer.indices error ${e}`)};
         }
 
 
@@ -307,12 +307,12 @@ export class VBOBatchingTrianglesLayer {
         {
             const pickColorsBase = buffer.pickColors.length;
             const lenPickColors = numVerts * 4;
-            for (let i = pickColorsBase, len = pickColorsBase + lenPickColors; i < len; i += 4) {
+            for (let i = pickColorsBase, len = pickColorsBase + lenPickColors; i < len; i += 4) try{
                 buffer.pickColors.push(pickColor[0]);
                 buffer.pickColors.push(pickColor[1]);
                 buffer.pickColors.push(pickColor[2]);
                 buffer.pickColors.push(pickColor[3]);
-            }
+            }catch(e){console.warn(`pickColors error ${e}`)}
         }
 
         if (scene.entityOffsetsEnabled) {

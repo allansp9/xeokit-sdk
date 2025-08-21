@@ -1419,9 +1419,13 @@ export class TreeViewPlugin extends Plugin {
 
         return this._renderService.createNodeElement(node, this._switchExpandHandler, this._checkboxChangeHandler, contextmenuHandler, onclickHandler);
     }
-
+    // Collab
+    // Mudança 15
+    // #269511 Permitir recolher lista de modelo com mensagem de alerta
+    // Ignorar elemento ul de alerta ao escolher o elemento a ser colapsado
     _expandSwitchElement(switchElement) {
-        const expanded = this._renderService.isExpanded(switchElement); 
+        const expandedUl = parentElement.lastElementChild;
+        const expanded = expandedUl.getElementsByTagName('li')[0];
         if (expanded) {
             return;
         }

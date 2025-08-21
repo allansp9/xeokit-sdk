@@ -161,10 +161,14 @@ function loadJSON(url, ok, err) {
             var json;
             try {
                 json = JSON.parse(response);
+                // Collab
+                //Mudança 14
+                //Collab -QiCloud - #259375 - Abertura dinâmica dos modelos
+                //impedir continuação do processamento quando há falha no json
+                ok(json);
             } catch (e) {
                 err(`utils.loadJSON(): Failed to parse JSON response - ${e}`);
             }
-            ok(json);
         } else if (this.status === 0) {
             // Some browsers return HTTP Status 0 when using non-http protocol
             // e.g. 'file://' or 'data://'. Handle as success.

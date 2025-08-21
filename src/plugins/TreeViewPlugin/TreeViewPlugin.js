@@ -723,7 +723,12 @@ export class TreeViewPlugin extends Plugin {
         const switchElement = this._renderService.getSwitchElement(nodeId);
         if (switchElement) {
             this._expandSwitchElement(switchElement);
-            switchElement.scrollIntoView();
+            //collab
+            //hotfix#268333
+            //scrollto quando selecionado um item da visualizacao 3D causa 
+            //deslocamento da lista de propriedades para direita
+            //switchElement.scrollIntoView();
+            scrollTo($(this.containerElement).parent(), $(switchElement));
             return true;
         }
         

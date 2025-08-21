@@ -936,7 +936,7 @@ export class TreeViewPlugin extends Plugin {
             this._doSortNodes();
         }
         this._synchNodesToEntities();
-        this._createTrees();
+        this._createTrees(cfg);
         this.expandToDepth(this._autoExpandDepth);
     }
 
@@ -1385,7 +1385,7 @@ export class TreeViewPlugin extends Plugin {
         }
     }
 
-    _createTrees() {
+    _createTrees(cfg) {
         if (this._rootNodes.length === 0) {
             return;
         }

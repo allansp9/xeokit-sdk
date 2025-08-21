@@ -384,7 +384,8 @@ class GLTFLoaderPlugin extends Plugin {
                     processMetaModelJSON(metaModelJSON);
                 }, (errMsg) => {
                     if (params.onError)
-                    params.onError(errMsg, modelId);
+                      params.onError(errMsg, modelId);
+                    
                     this.error(`load(): Failed to load model metadata for model '${modelId} from  '${metaModelSrc}' - ${errMsg}`);
                     this.viewer.scene.canvas.spinner.processes--;
                 });
